@@ -32,6 +32,268 @@
 
 ---
 
+## 🧭 Run this repository locally (macOS, Windows, Linux)
+
+This section gives you a copy-paste runbook to get both the backend (Django/ASGI) and the frontend (Quasar/Vue) running immediately. It includes OS-specific commands and the expected outcome after each step.
+
+Recommended versions:
+- Python: 3.12.x (supported range is 3.9 – 3.13.0; Python 3.13.1+ can cause pin conflicts)
+- Node: 18, 20, or 22 (Node 20 recommended)
+- Package manager: Yarn (via Corepack) or npm
+
+Before you start: open two terminals so you can run backend and frontend side by side.
+
+### 1) Clone and enter the repo
+
+```bash
+git clone https://github.com/MarcosMasip/Bomiot-self-contained.git
+cd Bomiot-self-contained
+```
+
+Expected outcome:
+- Repository is cloned and you are in the project root.
+
+### 2) Install Python 3.12 (if needed)
+
+- macOS (Homebrew):
+
+```bash
+brew install python@3.12
+python3.12 --version
+```
+
+- Linux (example for Debian/Ubuntu; adjust if needed):
+
+```bash
+sudo apt-get update
+sudo apt-get install -y python3.12 python3.12-venv
+python3.12 --version
+```
+
+- Windows (Microsoft Store or Python.org):
+  - Install Python 3.12 from https://www.python.org/downloads/windows/
+  - After install: `py -3.12 --version`
+
+Expected outcome:
+- The version command shows Python 3.12.x.
+
+### 3) Create and activate a virtual environment
+
+- macOS/Linux:
+
+```bash
+/opt/homebrew/bin/python3.12 -m venv .venv  # macOS Homebrew path; on Linux use: python3.12 -m venv .venv
+source .venv/bin/activate
+python --version
+```
+
+- Windows PowerShell:
+
+```powershell
+py -3.12 -m venv .venv
+./.venv/Scripts/Activate.ps1
+python --version
+```
+
+- Windows cmd.exe:
+
+```bat
+py -3.12 -m venv .venv
+.\.venv\Scripts\activate.bat
+python --version
+```
+
+Expected outcome:
+- A `.venv/` folder is created.
+- Your prompt shows the virtual environment active.
+- `python --version` prints 3.12.x.
+
+### 4) Upgrade pip tooling
+
+```bash
+pip install --upgrade pip wheel
+```
+
+Expected outcome:
+- pip and wheel upgrade without errors.
+
+### 5) Install backend dependencies (locked)
+
+```bash
+pip install -r requirements.txt
+```
+
+Expected outcome:
+- Installs Django, uvicorn, and other pinned packages successfully with no conflicts.
+
+### 6) Install this package as an editable CLI (no deps re-resolve)
+
+```bash
+pip install -e . --no-deps
+bomiot -v
+```
+
+Expected outcome:
+- Editable install succeeds; `bomiot` command becomes available.
+- `bomiot -v` prints the bomiot version.
+
+### 7) Initialize the workspace
+
+```bash
+bomiot init
+```
+
+Expected outcome:
+- Creates `logs/` and `deploy/` directories (if missing).
+- Generates an auth key (auth_key.py) if missing.
+- Prints an ASCII banner.
+
+### 8) Scaffold a new project (choose a name)
+
+```bash
+bomiot project my-project
+```
+
+Expected outcome:
+- Creates `my-project/` with backend `media/`, `language/`, and frontend `templates/`.
+- Writes/updates `setup.ini` with `[project] name = my-project`.
+- Outputs: `Initialized project workspace my-project`.
+
+Note: The root `.gitignore` already ignores `/my-project/` to keep your repo clean.
+
+### 9) Apply database migrations
+
+```bash
+bomiot migrate
+```
+
+Expected outcome:
+- Django applies migrations.
+- SQLite DB created at `dbs/db.sqlite3`.
+- Ends with lines like “Applying … OK”.
+
+### 10) Create an admin user
+
+```bash
+bomiot initadmin
+```
+
+Expected outcome:
+- If absent: creates admin/admin and prints credentials.
+- If present: prints that admin already exists.
+
+### 11) Start the backend server (keep it running)
+
+```bash
+bomiot run --host 127.0.0.1 --port 8000
+```
+
+Expected outcome:
+- Uvicorn starts on http://127.0.0.1:8000
+- Logs show “Application startup complete”.
+- Useful endpoints (GET):
+  - http://127.0.0.1:8000/test/
+  - http://127.0.0.1:8000/fastapi/test/
+  - http://127.0.0.1:8000/flask/test/
+- Django admin: http://127.0.0.1:8000/admin/ (login admin/admin).
+
+Leave this terminal running.
+
+### 12) Open a second terminal for the frontend
+
+Ensure Node and Yarn are available:
+
+- macOS/Linux:
+
+```bash
+node -v || echo "Please install Node (https://nodejs.org)"
+corepack enable
+corepack prepare yarn@stable --activate
+yarn -v
+```
+
+- Windows PowerShell:
+
+```powershell
+node -v
+corepack enable
+corepack prepare yarn@stable --activate
+yarn -v
+```
+
+Expected outcome:
+- Node prints v18/20/22+; Yarn prints a version (Corepack-managed is recommended).
+
+### 13) Install frontend dependencies
+
+```bash
+cd my-project/templates
+yarn install
+```
+
+Expected outcome:
+- Installs node_modules.
+- Quasar performs its prepare step.
+
+### 14) Point axios to the backend (baseURL)
+
+Option A — quick manual edit:
+- Open `my-project/templates/src/boot/axios.js` and change:
+  - Ensure the const exists: `const baseURL = 'http://127.0.0.1:8000'`
+  - In the axios.create call, uncomment baseURL:
+    - Change `// baseURL: baseURL` to `baseURL: baseURL`
+
+Option B — command line (macOS/Linux):
+
+```bash
+sed -i '' 's#// baseURL: baseURL#baseURL: baseURL#' src/boot/axios.js  # macOS (BSD sed)
+# Linux (GNU sed): sed -i 's#// baseURL: baseURL#baseURL: baseURL#' src/boot/axios.js
+```
+
+Option C — Windows PowerShell:
+
+```powershell
+(Get-Content src/boot/axios.js) -replace '// baseURL: baseURL','baseURL: baseURL' | Set-Content src/boot/axios.js
+```
+
+Expected outcome:
+- Axios will call the backend at http://127.0.0.1:8000.
+
+### 15) Run the frontend dev server
+
+```bash
+yarn dev
+```
+
+Expected outcome:
+- Quasar dev server starts and opens your browser automatically (often http://localhost:9000).
+- The UI loads; network calls go to http://127.0.0.1:8000 and should succeed.
+
+### ✅ Verify
+- Visit http://127.0.0.1:8000/test/ in your browser — you should see a simple JSON response.
+- Visit http://127.0.0.1:8000/admin/ and log in with admin/admin.
+- Use the frontend and confirm it can fetch data.
+
+### 🛑 Shutdown / Closing procedures
+- Frontend: press Ctrl+C in the terminal running `yarn dev`.
+- Backend: press Ctrl+C in the terminal running `bomiot run` (wait for graceful shutdown log lines).
+- Deactivate the virtual environment (optional):
+
+```bash
+deactivate
+```
+
+### 🧰 Troubleshooting
+- Python 3.13.1 error when installing: This repo pins dependencies to `<=3.13.0`. Use Python 3.12.x to avoid conflicts.
+- macOS “command not found: python3.12”: Install via Homebrew (`brew install python@3.12`) or use the system’s python3 if it’s 3.12.x.
+- Windows execution policy prevents venv activation: In PowerShell (admin), run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` once, then activate again.
+- Quasar dev fails to open the browser: Copy the printed local URL (e.g., http://localhost:9000) and paste it into your browser manually.
+- API calls failing from the frontend:
+  - Ensure backend is running on 127.0.0.1:8000.
+  - Ensure `src/boot/axios.js` has `baseURL: baseURL` uncommented.
+  - Check the browser console/network tab for details.
+
+
 ## 📋 Table of Contents
 
 - [🌟 Project Introduction](#-project-introduction)
