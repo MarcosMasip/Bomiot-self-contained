@@ -193,8 +193,8 @@ Expected outcome:
 - Logs show “Application startup complete”.
 - Useful endpoints (GET):
   - http://127.0.0.1:8000/test/
-  - http://127.0.0.1:8000/fastapi/test/
-  - http://127.0.0.1:8000/flask/test/
+  - http://127.0.0.1:8000/fastapi/test/ (demo stub)
+  - http://127.0.0.1:8000/flask/test/ (demo stub)
 - Django admin: http://127.0.0.1:8000/admin/ (login admin/admin).
 
 Leave this terminal running.
@@ -600,10 +600,16 @@ Options:
 # Basic startup
 bomiot run
 
-# Test api，method("GET")
-"name": "django", "url": "http://127.0.0.1:8000/test/"
-"name": "fastapi", "url": "http://127.0.0.1:8000/fastapi/test/"
-"name": "flask", "url": "http://127.0.0.1:8000/flask/test/"
+# Test API (GET)
+"name": "django",  "url": "http://127.0.0.1:8000/test/"
+"name": "fastapi", "url": "http://127.0.0.1:8000/fastapi/test/"  # demo stub via Django
+"name": "flask",   "url": "http://127.0.0.1:8000/flask/test/"     # demo stub via Django
+
+# Note: The FastAPI/Flask demo endpoints above are lightweight stubs served by Django
+# so the repo is fully self-contained. To integrate real FastAPI/Flask apps under these
+# paths, see:
+#   - bomiot/server/media/fastapi.en-US.md
+#   - bomiot/server/media/flask.en-US.md
 
 # Specify port and host
 bomiot run --host 0.0.0.0 --port 8080

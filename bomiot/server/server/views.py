@@ -31,6 +31,24 @@ async def test(request):
     return JsonResponse({"msg": "This is Django API"})
 
 
+async def fastapi_test(request):
+    """
+    Lightweight demo endpoint to avoid 404 for /fastapi/test out-of-the-box.
+    Note: This is served by Django as a stub. To use a real FastAPI app,
+    see media/fastapi.en-US.md for scaffolding and mounting instructions.
+    """
+    return JsonResponse({"msg": "This is FastAPI demo (stubbed via Django)."})
+
+
+async def flask_test(request):
+    """
+    Lightweight demo endpoint to avoid 404 for /flask/test out-of-the-box.
+    Note: This is served by Django as a stub. To use a real Flask app,
+    see media/flask.en-US.md for scaffolding and mounting instructions.
+    """
+    return JsonResponse({"msg": "This is Flask demo (stubbed via Django)."})
+
+
 class IndexTemplateView(TemplateView):
     def get_template_names(self):
         project_name = self.request.COOKIES.get('project', settings.PROJECT_NAME)

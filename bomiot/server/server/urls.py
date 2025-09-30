@@ -33,6 +33,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.IndexTemplateView.as_view()),
     path('test/', views.test),
+    # Demo stubs to keep repo self-contained (no external frameworks required)
+    path('fastapi/test/', views.fastapi_test),
+    path('flask/test/', views.flask_test),
     path('login/', views.logins, name='login'),
     path('logout/', views.logouts, name='logout'),
     path('checktoken/', views.check_token, name='check_token'),
