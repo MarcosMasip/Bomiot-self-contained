@@ -245,9 +245,20 @@ Option A — quick manual edit:
 
 Option B — command line (macOS/Linux):
 
+Note for zsh users: inline comments with `#` are disabled in interactive shells unless you run `setopt interactive_comments`. The commands below do not include trailing comments to avoid zsh parse errors.
+
 ```bash
-sed -i '' 's#// baseURL: baseURL#baseURL: baseURL#' src/boot/axios.js  # macOS (BSD sed)
-# Linux (GNU sed): sed -i 's#// baseURL: baseURL#baseURL: baseURL#' src/boot/axios.js
+# macOS (BSD sed) from templates/ directory
+sed -i '' -e 's#// baseURL: baseURL#baseURL: baseURL#' src/boot/axios.js
+
+# macOS (BSD sed) from repo root
+sed -i '' -e 's#// baseURL: baseURL#baseURL: baseURL#' my-project/templates/src/boot/axios.js
+
+# Linux (GNU sed) from templates/ directory
+sed -i -e 's#// baseURL: baseURL#baseURL: baseURL#' src/boot/axios.js
+
+# Linux (GNU sed) from repo root
+sed -i -e 's#// baseURL: baseURL#baseURL: baseURL#' my-project/templates/src/boot/axios.js
 ```
 
 Option C — Windows PowerShell:
@@ -458,7 +469,7 @@ vim my-project/templates/src/boot/axios.js
 const baseURL = 'http://127.0.0.1:8000' // Replace with your actual API URL
 
 const api = axios.create({
-  baseURL: baseURL ##Open this
+  baseURL: baseURL
 })
  ...
 ```
