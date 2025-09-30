@@ -59,3 +59,9 @@ bomiot_ready.lock
 
 # Ignore deployment output created by `bomiot init`
 /deploy/
+
+# Ignore accidental local tool dirs created inside the repo (prevents 1k+ SCM noise)
+/Homebrew/
+/macOS/
+/path/
+/#/
