@@ -1,10 +1,8 @@
 import sys
 import os
-import uvicorn
 import time
 from bomiot import version
 import argparse
-import psutil
 import multiprocessing
 import threading
 
@@ -270,6 +268,7 @@ def cmd():
         migrate()
     # run server
     elif command == 'run':
+        import uvicorn  # lazy import so other commands don't require uvicorn
         import platform
         import importlib.resources
         from os.path import join
