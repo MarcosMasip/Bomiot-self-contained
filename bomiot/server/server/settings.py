@@ -319,6 +319,7 @@ CORS_ALLOW_HEADERS = (
     'x-requested-with',
     'token',
     'language',
+    'project',
     'operator',
     'device',
     'app-id',
