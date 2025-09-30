@@ -18,6 +18,8 @@ install.sh
 notice.*
 *.pyc
 .venv
+.venv*
+.DS_Store
 /admin
 setup.ini
 asgi.py
@@ -50,3 +52,10 @@ ci-logs/
 /testing/
 /dbs/
 bomiot_ready.lock
+
+# Ignore generated local project(s) created via `bomiot project <name>`
+# This prevents large scaffolding and frontend artifacts from polluting the repo SCM view
+/my-project/
+
+# Ignore deployment output created by `bomiot init`
+/deploy/
